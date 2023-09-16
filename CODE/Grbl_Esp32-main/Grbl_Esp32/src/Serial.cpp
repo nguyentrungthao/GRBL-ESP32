@@ -57,9 +57,6 @@
 
 #include "Grbl.h"
 
-// #include "freertos/FreeRTOS.h"
-// #include "freertos/task.h"
-
 // Define this to use the Arduino serial (UART) driver instead
 // of the one in Uart.cpp, which uses the ESP-IDF UART driver.
 // This is for regression testing, and can be removed after
@@ -131,6 +128,7 @@ void client_init() {
     );
 }
 
+//! cẩn thận bug 
 static uint8_t getClientChar(uint8_t* data) {
     int res;
 #ifdef REVERT_TO_ARDUINO_SERIAL
@@ -167,7 +165,7 @@ static uint8_t getClientChar(uint8_t* data) {
     }
 #endif
     return CLIENT_ALL;
-}
+    }
 
 // this task runs and checks for data on all interfaces
 // REaltime stuff is acted upon, then characters are added to the appropriate buffer

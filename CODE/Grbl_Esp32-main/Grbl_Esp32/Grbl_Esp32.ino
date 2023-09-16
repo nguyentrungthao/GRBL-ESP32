@@ -3,8 +3,8 @@
   Part of Grbl
   Copyright (c) 2014-2016 Sungeun K. Jeon for Gnea Research LLC
 
-	2018 -	Bart Dring This file was modified for use on the ESP32
-					CPU. Do not use this with Grbl for atMega328P
+  2018 -	Bart Dring This file was modified for use on the ESP32
+          CPU. Do not use this with Grbl for atMega328P
 
   Grbl is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,15 +27,19 @@
 
 void setup() {
   grbl_init();
-  // Serial.begin(115200);
-  // pinMode(2, OUTPUT);
+  xTaskCreate(xTaskMain, "task main", 2048, NULL, 1, NULL);
 }
-
+// vòng loop là task có độ ưu tiên 1
 void loop() {
   run_once();
-  Serial.println("hello");
-  // digitalWrite(2, 1);
-  // delay(500);
-  // digitalWrite(2, 0);
-  // delay(500);
+}
+
+void xTaskMain(void* pvPrameter) {
+  pinMode(2, OUTPUT);
+  while (1) {
+    digitalWrite(2, 1);
+    delay(1000);
+    digitalWrite(2, 0);
+    delay(1000);
+  }
 }
