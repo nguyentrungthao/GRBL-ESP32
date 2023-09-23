@@ -83,6 +83,7 @@ namespace WebUI {
             if (current > RXBUFFERSIZE) {
                 current = current - RXBUFFERSIZE;
             }
+            //copy data 
             for (int i = 0; i < data_size; i++) {
                 if (current > (RXBUFFERSIZE - 1)) {
                     current = 0;
@@ -90,6 +91,7 @@ namespace WebUI {
                 _RXbuffer[current] = data[i];
                 current++;
             }
+            
             _RXbufferSize += strlen(data);
             return true;
         }

@@ -32,14 +32,16 @@ void setup() {
 // vòng loop là task có độ ưu tiên 1
 void loop() {
   run_once();
+  uint8_t i = 0;
 }
 
 void xTaskMain(void* pvPrameter) {
   pinMode(2, OUTPUT);
   while (1) {
+    grbl_send_str("G0 X10 Y10 Z10");
     digitalWrite(2, 1);
-    delay(1000);
+    delay(100);
     digitalWrite(2, 0);
-    delay(1000);
+    delay(100);
   }
 }

@@ -128,7 +128,7 @@ void client_init() {
     );
 }
 
-//! cẩn thận bug 
+
 static uint8_t getClientChar(uint8_t* data) {
     int res;
 #ifdef REVERT_TO_ARDUINO_SERIAL

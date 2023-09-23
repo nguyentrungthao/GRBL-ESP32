@@ -53,7 +53,7 @@ namespace WebUI {
 
         uint8_t  _RXbuffer[RXBUFFERSIZE];
         uint16_t _RXbufferSize;
-        uint16_t _RXbufferpos;
+        uint16_t _RXbufferpos; 
     };
 
     extern InputBuffer inputBuffer;

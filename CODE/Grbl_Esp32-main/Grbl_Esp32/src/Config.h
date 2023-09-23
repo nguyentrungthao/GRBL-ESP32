@@ -41,19 +41,27 @@ Some features should not be changed. See notes below.
 
 #include "NutsBolts.h"
 
-// It is no longer necessary to edit this file to choose
-// a machine configuration; edit machine.h instead
-// machine.h is #included below, after some definitions
-// that the machine file might choose to undefine.
+//! Mở define nếu muốn dùng các config tự viết
+#define USER_CONFIG
 
-// Note: HOMING_CYCLES are now settings
+#ifdef USER_CONFIG
+#define USE_SERVO_AXES 
+#endif
+
+
+//* It is no longer necessary to edit this file to choose
+//* a machine configuration; edit machine.h instead
+//* machine.h is #included below, after some definitions
+//* that the machine file might choose to undefine.
+
+// *Note: HOMING_CYCLES are now settings
 #define SUPPORT_TASK_CORE 1  // Reference: CONFIG_ARDUINO_RUNNING_CORE = 1
 
-// Inverts pin logic of the control command pins based on a mask. This essentially means you can use
-// normally-closed switches on the specified pins, rather than the default normally-open switches.
-// The mask order is ...
-// Macro3 | Macro2 | Macro 1| Macr0 |Cycle Start | Feed Hold | Reset | Safety Door
-// For example B1101 will invert the function of the Reset pin.
+//* Inverts pin logic of the control command pins based on a mask. This essentially means you can use
+//* normally-closed switches on the specified pins, rather than the default normally-open switches.
+//* The mask order is ...
+//* Macro3 | Macro2 | Macro 1| Macr0 |Cycle Start | Feed Hold | Reset | Safety Door
+/// For example B1101 will invert the function of the Reset pin.
 #define INVERT_CONTROL_PIN_MASK B00001111
 
 // #define ENABLE_CONTROL_SW_DEBOUNCE     // Default disabled. Uncomment to enable.
@@ -87,48 +95,48 @@ const int MAX_N_AXIS = 6;
 #    define LIMIT_MASK B0
 #endif
 
-// Serial baud rate
-// OK to change, but the ESP32 boot text is 115200, so you will not see that is your
-// serial monitor, sender, etc uses a different value than 115200
+//* Serial baud rate
+//* OK to change, but the ESP32 boot text is 115200, so you will not see that is your
+//* serial monitor, sender, etc uses a different value than 115200
 #define BAUD_RATE 115200
 
-//Connect to your local AP with these credentials
-//#define CONNECT_TO_SSID  "your SSID"
-//#define SSID_PASSWORD  "your SSID password"
-//CONFIGURE_EYECATCH_BEGIN (DO NOT MODIFY THIS LINE)
-#define ENABLE_BLUETOOTH  // enable bluetooth
+//*Connect to your local AP with these credentials
+// #define CONNECT_TO_SSID  "IoTVision_2.4GHz"
+// #define SSID_PASSWORD  "iotvision@2022"
+//*CONFIGURE_EYECATCH_BEGIN (DO NOT MODIFY THIS LINE)
+// #define ENABLE_BLUETOOTH  // enable bluetooth
 
-#define ENABLE_SD_CARD  // enable use of SD Card to run jobs
+// #define ENABLE_SD_CARD  // enable use of SD Card to run jobs
 
-#define ENABLE_WIFI  //enable wifi
+// #define ENABLE_WIFI  //enable wifi
 
 #if defined(ENABLE_WIFI) || defined(ENABLE_BLUETOOTH)
 #    define WIFI_OR_BLUETOOTH
 #endif
 
-#define ENABLE_HTTP                //enable HTTP and all related services
-#define ENABLE_OTA                 //enable OTA
-#define ENABLE_TELNET              //enable telnet
-#define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
-#define ENABLE_MDNS                //enable mDNS discovery
-#define ENABLE_SSDP                //enable UPNP discovery
-#define ENABLE_NOTIFICATIONS       //enable notifications
+// #define ENABLE_HTTP                //enable HTTP and all related services
+// #define ENABLE_OTA                 //enable OTA
+// #define ENABLE_TELNET              //enable telnet
+// #define ENABLE_TELNET_WELCOME_MSG  //display welcome string when connect to telnet
+// #define ENABLE_MDNS                //enable mDNS discovery
+// #define ENABLE_SSDP                //enable UPNP discovery
+// #define ENABLE_NOTIFICATIONS       //enable notifications
 
 #define ENABLE_SERIAL2SOCKET_IN
 #define ENABLE_SERIAL2SOCKET_OUT
 
-// Captive portal is used when WiFi is in access point mode.  It lets the
-// WebUI come up automatically in the browser, instead of requiring the user
-// to browse manually to a default URL.  It works like airport and hotel
-// WiFi that takes you a special page as soon as you connect to that AP.
+//* Captive portal is used when WiFi is in access point mode.  It lets the
+//* WebUI come up automatically in the browser, instead of requiring the user
+//* to browse manually to a default URL.  It works like airport and hotel
+//* WiFi that takes you a special page as soon as you connect to that AP.
 #define ENABLE_CAPTIVE_PORTAL
 
-// Warning! The current authentication implementation is too weak to provide
-// security against an attacker, since passwords are stored and transmitted
-// "in the clear" over unsecured channels.  It should be treated as a
-// "friendly suggestion" to prevent unwitting dangerous actions, rather than
-// as effective security against malice.
-// #define ENABLE_AUTHENTICATION
+//* Warning! The current authentication implementation is too weak to provide
+//* security against an attacker, since passwords are stored and transmitted
+//* "in the clear" over unsecured channels.  It should be treated as a
+//* "friendly suggestion" to prevent unwitting dangerous actions, rather than
+//* as effective security against malice.
+//* #define ENABLE_AUTHENTICATION
 //CONFIGURE_EYECATCH_END (DO NOT MODIFY THIS LINE)
 
 #ifdef ENABLE_AUTHENTICATION
@@ -160,17 +168,17 @@ const int DEFAULT_RADIO_MODE = ESP_RADIO_OFF;
 #    endif
 #endif
 
-// Define realtime command special characters. These characters are 'picked-off' directly from the
-// serial read data stream and are not passed to the grbl line execution parser. Select characters
-// that do not and must not exist in the streamed GCode program. ASCII control characters may be
-// used, if they are available per user setup. Also, extended ASCII codes (>127), which are never in
-// GCode programs, maybe selected for interface programs.
-// NOTE: If changed, manually update help message in report.c.
+//* Define realtime command special characters. These characters are 'picked-off' directly from the
+//* serial read data stream and are not passed to the grbl line execution parser. Select characters
+//* that do not and must not exist in the streamed GCode program. ASCII control characters may be
+//* used, if they are available per user setup. Also, extended ASCII codes (>127), which are never in
+//* GCode programs, maybe selected for interface programs.
+//! NOTE: If changed, manually update help message in report.c.
 
-// NOTE: All override realtime commands must be in the extended ASCII character set, starting
-// at character value 128 (0x80) and up to 255 (0xFF). If the normal set of realtime commands,
-// such as status reports, feed hold, reset, and cycle start, are moved to the extended set
-// space, serial.c's RX ISR will need to be modified to accommodate the change.
+//* NOTE: All override realtime commands must be in the extended ASCII character set, starting
+//* at character value 128 (0x80) and up to 255 (0xFF). If the normal set of realtime commands,
+//* such as status reports, feed hold, reset, and cycle start, are moved to the extended set
+//* space, serial.c's RX ISR will need to be modified to accommodate the change.
 
 enum class Cmd : uint8_t {
     Reset                 = 0x18,  // Ctrl-X
@@ -199,101 +207,101 @@ enum class Cmd : uint8_t {
     CoolantMistOvrToggle  = 0xA1,
 };
 
-// If homing is enabled, homing init lock sets Grbl into an alarm state upon power up. This forces
-// the user to perform the homing cycle (or override the locks) before doing anything else. This is
-// mainly a safety feature to remind the user to home, since position is unknown to Grbl.
+//* If homing is enabled, homing init lock sets Grbl into an alarm state upon power up. This forces
+//* the user to perform the homing cycle (or override the locks) before doing anything else. This is
+//* mainly a safety feature to remind the user to home, since position is unknown to Grbl.
 #define HOMING_INIT_LOCK  // Comment to disable
 
-// Number of homing cycles performed after when the machine initially jogs to limit switches.
-// This help in preventing overshoot and should improve repeatability. This value should be one or
-// greater.
+//* Number of homing cycles performed after when the machine initially jogs to limit switches.
+//* This help in preventing overshoot and should improve repeatability. This value should be one or
+//* greater.
 static const uint8_t NHomingLocateCycle = 1;  // Integer (1-128)
 
-// Enables single axis homing commands. $HX, $HY, and $HZ for X, Y, and Z-axis homing. The full homing
-// cycle is still invoked by the $H command. This is disabled by default. It's here only to address
-// users that need to switch between a two-axis and three-axis machine. This is actually very rare.
-// If you have a two-axis machine, DON'T USE THIS. Instead, just alter the homing cycle for two-axes.
+//* Enables single axis homing commands. $HX, $HY, and $HZ for X, Y, and Z-axis homing. The full homing
+//* cycle is still invoked by the $H command. This is disabled by default. It's here only to address
+//* users that need to switch between a two-axis and three-axis machine. This is actually very rare.
+//* If you have a two-axis machine, DON'T USE THIS. Instead, just alter the homing cycle for two-axes.
 #define HOMING_SINGLE_AXIS_COMMANDS  // Default disabled. Uncomment to enable.
 
-// Number of blocks Grbl executes upon startup. These blocks are stored in non-volatile storage.
-// and addresses are defined in settings.h. With the current settings, up to 2 startup blocks may
-// be stored and executed in order. These startup blocks would typically be used to set the GCode
-// parser state depending on user preferences.
+//* Number of blocks Grbl executes upon startup. These blocks are stored in non-volatile storage.
+//* and addresses are defined in settings.h. With the current settings, up to 2 startup blocks may
+//* be stored and executed in order. These startup blocks would typically be used to set the GCode
+//* parser state depending on user preferences.
 #define N_STARTUP_LINE 2  // Integer (1-2)
 
-// Number of floating decimal points printed by Grbl for certain value types. These settings are
-// determined by realistic and commonly observed values in CNC machines. For example, position
-// values cannot be less than 0.001mm or 0.0001in, because machines can not be physically more
-// precise this. So, there is likely no need to change these, but you can if you need to here.
-// NOTE: Must be an integer value from 0 to ~4. More than 4 may exhibit round-off errors.
-// ESP32 Note: These are mostly hard coded, so these values will not change anything
+//* Number of floating decimal points printed by Grbl for certain value types. These settings are
+//* determined by realistic and commonly observed values in CNC machines. For example, position
+//* values cannot be less than 0.001mm or 0.0001in, because machines can not be physically more
+//* precise this. So, there is likely no need to change these, but you can if you need to here.
+//* NOTE: Must be an integer value from 0 to ~4. More than 4 may exhibit round-off errors.
+//* ESP32 Note: These are mostly hard coded, so these values will not change anything
 
-// If your machine has two limits switches wired in parallel to one axis, you will need to enable
-// this feature. Since the two switches are sharing a single pin, there is no way for Grbl to tell
-// which one is enabled. This option only effects homing, where if a limit is engaged, Grbl will
-// alarm out and force the user to manually disengage the limit switch. Otherwise, if you have one
-// limit switch for each axis, don't enable this option. By keeping it disabled, you can perform a
-// homing cycle while on the limit switch and not have to move the machine off of it.
+//* If your machine has two limits switches wired in parallel to one axis, you will need to enable
+//* this feature. Since the two switches are sharing a single pin, there is no way for Grbl to tell
+//* which one is enabled. This option only effects homing, where if a limit is engaged, Grbl will
+//* alarm out and force the user to manually disengage the limit switch. Otherwise, if you have one
+//* limit switch for each axis, don't enable this option. By keeping it disabled, you can perform a
+//* homing cycle while on the limit switch and not have to move the machine off of it.
 // #define LIMITS_TWO_SWITCHES_ON_AXES
 
-// Allows GRBL to track and report gcode line numbers.  Enabling this means that the planning buffer
-// goes from 16 to 15 to make room for the additional line number data in the plan_block_t struct
+//* Allows GRBL to track and report gcode line numbers.  Enabling this means that the planning buffer
+//* goes from 16 to 15 to make room for the additional line number data in the plan_block_t struct
 // #define USE_LINE_NUMBERS // Disabled by default. Uncomment to enable.
 
-// Upon a successful probe cycle, this option provides immediately feedback of the probe coordinates
-// through an automatically generated message. If disabled, users can still access the last probe
-// coordinates through Grbl '$#' print parameters.
+//* Upon a successful probe cycle, this option provides immediately feedback of the probe coordinates
+//* through an automatically generated message. If disabled, users can still access the last probe
+//* coordinates through Grbl '$#' print parameters.
 #define MESSAGE_PROBE_COORDINATES  // Enabled by default. Comment to disable.
 
-// Enables a second coolant control pin via the mist coolant GCode command M7 on the Arduino Uno
-// analog pin 4. Only use this option if you require a second coolant control pin.
-// NOTE: The M8 flood coolant control pin on analog pin 3 will still be functional regardless.
-// ESP32 NOTE! This is here for reference only. You enable both M7 and M8 by assigning them a GPIO Pin
-// in the machine definition file.
+//* Enables a second coolant control pin via the mist coolant GCode command M7 on the Arduino Uno
+//* analog pin 4. Only use this option if you require a second coolant control pin.
+//* NOTE: The M8 flood coolant control pin on analog pin 3 will still be functional regardless.
+//* ESP32 NOTE! This is here for reference only. You enable both M7 and M8 by assigning them a GPIO Pin
+//* in the machine definition file.
 //#define ENABLE_M7 // Don't uncomment...see above!
 
-// This option causes the feed hold input to act as a safety door switch. A safety door, when triggered,
-// immediately forces a feed hold and then safely de-energizes the machine. Resuming is blocked until
-// the safety door is re-engaged. When it is, Grbl will re-energize the machine and then resume on the
-// previous tool path, as if nothing happened.
+//* This option causes the feed hold input to act as a safety door switch. A safety door, when triggered,
+//* immediately forces a feed hold and then safely de-energizes the machine. Resuming is blocked until
+//* the safety door is re-engaged. When it is, Grbl will re-energize the machine and then resume on the
+//* previous tool path, as if nothing happened.
 #define ENABLE_SAFETY_DOOR_INPUT_PIN  // ESP32 Leave this enabled for now .. code for undefined not ready
 
-// Inverts select limit pin states based on the following mask. This effects all limit pin functions,
-// such as hard limits and homing. However, this is different from overall invert limits setting.
-// This build option will invert only the limit pins defined here, and then the invert limits setting
-// will be applied to all of them. This is useful when a user has a mixed set of limit pins with both
-// normally-open(NO) and normally-closed(NC) switches installed on their machine.
-// NOTE: PLEASE DO NOT USE THIS, unless you have a situation that needs it.
+//* Inverts select limit pin states based on the following mask. This effects all limit pin functions,
+//* such as hard limits and homing. However, this is different from overall invert limits setting.
+//* This build option will invert only the limit pins defined here, and then the invert limits setting
+//* will be applied to all of them. This is useful when a user has a mixed set of limit pins with both
+//* normally-open(NO) and normally-closed(NC) switches installed on their machine.
+//* NOTE: PLEASE DO NOT USE THIS, unless you have a situation that needs it.
 // #define INVERT_LIMIT_PIN_MASK (bit(X_AXIS)|bit(Y_AXIS)) // Default disabled. Uncomment to enable.
 
-// Inverts the selected coolant pin from low-disabled/high-enabled to low-enabled/high-disabled. Useful
-// for some pre-built electronic boards.
-// #define INVERT_COOLANT_FLOOD_PIN // Default disabled. Uncomment to enable.
+//* Inverts the selected coolant pin from low-disabled/high-enabled to low-enabled/high-disabled. Useful
+//* for some pre-built electronic boards.
+//* #define INVERT_COOLANT_FLOOD_PIN //* Default disabled. Uncomment to enable.
 // #define INVERT_COOLANT_MIST_PIN // Default disabled. Note: Enable M7 mist coolant in config.h
 
-// When Grbl powers-cycles or is hard reset with the Arduino reset button, Grbl boots up with no ALARM
-// by default. This is to make it as simple as possible for new users to start using Grbl. When homing
-// is enabled and a user has installed limit switches, Grbl will boot up in an ALARM state to indicate
-// Grbl doesn't know its position and to force the user to home before proceeding. This option forces
-// Grbl to always initialize into an ALARM state regardless of homing or not. This option is more for
-// OEMs and LinuxCNC users that would like this power-cycle behavior.
+//* When Grbl powers-cycles or is hard reset with the Arduino reset button, Grbl boots up with no ALARM
+//* by default. This is to make it as simple as possible for new users to start using Grbl. When homing
+//* is enabled and a user has installed limit switches, Grbl will boot up in an ALARM state to indicate
+//* Grbl doesn't know its position and to force the user to home before proceeding. This option forces
+//* Grbl to always initialize into an ALARM state regardless of homing or not. This option is more for
+//* OEMs and LinuxCNC users that would like this power-cycle behavior.
 // #define FORCE_INITIALIZATION_ALARM // Default disabled. Uncomment to enable.
 
-// At power-up or a reset, Grbl will check the limit switch states to ensure they are not active
-// before initialization. If it detects a problem and the hard limits setting is enabled, Grbl will
-// simply message the user to check the limits and enter an alarm state, rather than idle. Grbl will
-// not throw an alarm message.
+//* At power-up or a reset, Grbl will check the limit switch states to ensure they are not active
+//* before initialization. If it detects a problem and the hard limits setting is enabled, Grbl will
+//* simply message the user to check the limits and enter an alarm state, rather than idle. Grbl will
+//* not throw an alarm message.
 #define CHECK_LIMITS_AT_INIT
 
-// ---------------------------------------------------------------------------------------
-// ADVANCED CONFIGURATION OPTIONS:
+//* ---------------------------------------------------------------------------------------
+//* ADVANCED CONFIGURATION OPTIONS:
 
-// Enables code for debugging purposes. Not for general use and always in constant flux.
+//* Enables code for debugging purposes. Not for general use and always in constant flux.
 // #define DEBUG // Uncomment to enable. Default disabled.
 
-// Configure rapid, feed, and spindle override settings. These values define the max and min
-// allowable override values and the coarse and fine increments per command received. Please
-// note the allowable values in the descriptions following each define.
+//* Configure rapid, feed, and spindle override settings. These values define the max and min
+//* allowable override values and the coarse and fine increments per command received. Please
+//* note the allowable values in the descriptions following each define.
 namespace FeedOverride {
     const int Default         = 100;  // 100%. Don't change this value.
     const int Max             = 200;  // Percent of programmed feed rate (100-255). Usually 120% or 200%
@@ -316,17 +324,17 @@ namespace SpindleSpeedOverride {
     const int FineIncrement   = 1;    // (1-99). Usually 1%.
 }
 
-// When a M2 or M30 program end command is executed, most GCode states are restored to their defaults.
-// This compile-time option includes the restoring of the feed, rapid, and spindle speed override values
-// to their default values at program end.
+//* When a M2 or M30 program end command is executed, most GCode states are restored to their defaults.
+//* This compile-time option includes the restoring of the feed, rapid, and spindle speed override values
+//* to their default values at program end.
 #define RESTORE_OVERRIDES_AFTER_PROGRAM_END  // Default enabled. Comment to disable.
 
-// The status report change for Grbl v1.1 and after also removed the ability to disable/enable most data
-// fields from the report. This caused issues for GUI developers, who've had to manage several scenarios
-// and configurations. The increased efficiency of the new reporting style allows for all data fields to
-// be sent without potential performance issues.
-// NOTE: The options below are here only provide a way to disable certain data fields if a unique
-// situation demands it, but be aware GUIs may depend on this data. If disabled, it may not be compatible.
+//* The status report change for Grbl v1.1 and after also removed the ability to disable/enable most data
+//* fields from the report. This caused issues for GUI developers, who've had to manage several scenarios
+//* and configurations. The increased efficiency of the new reporting style allows for all data fields to
+//* be sent without potential performance issues.
+//* NOTE: The options below are here only provide a way to disable certain data fields if a unique
+//* situation demands it, but be aware GUIs may depend on this data. If disabled, it may not be compatible.
 #define REPORT_FIELD_BUFFER_STATE        // Default enabled. Comment to disable.
 #define REPORT_FIELD_PIN_STATE           // Default enabled. Comment to disable.
 #define REPORT_FIELD_CURRENT_FEED_SPEED  // Default enabled. Comment to disable.
@@ -334,49 +342,49 @@ namespace SpindleSpeedOverride {
 #define REPORT_FIELD_OVERRIDES           // Default enabled. Comment to disable.
 #define REPORT_FIELD_LINE_NUMBERS        // Default enabled. Comment to disable.
 
-// Some status report data isn't necessary for realtime, only intermittently, because the values don't
-// change often. The following macros configures how many times a status report needs to be called before
-// the associated data is refreshed and included in the status report. However, if one of these value
-// changes, Grbl will automatically include this data in the next status report, regardless of what the
-// count is at the time. This helps reduce the communication overhead involved with high frequency reporting
-// and agressive streaming. There is also a busy and an idle refresh count, which sets up Grbl to send
-// refreshes more often when its not doing anything important. With a good GUI, this data doesn't need
-// to be refreshed very often, on the order of a several seconds.
-// NOTE: WCO refresh must be 2 or greater. OVR refresh must be 1 or greater.
+//* Some status report data isn't necessary for realtime, only intermittently, because the values don't
+//* change often. The following macros configures how many times a status report needs to be called before
+//* the associated data is refreshed and included in the status report. However, if one of these value
+//* changes, Grbl will automatically include this data in the next status report, regardless of what the
+//* count is at the time. This helps reduce the communication overhead involved with high frequency reporting
+//* and agressive streaming. There is also a busy and an idle refresh count, which sets up Grbl to send
+//* refreshes more often when its not doing anything important. With a good GUI, this data doesn't need
+//* to be refreshed very often, on the order of a several seconds.
+//* NOTE: WCO refresh must be 2 or greater. OVR refresh must be 1 or greater.
 const int REPORT_OVR_REFRESH_BUSY_COUNT = 20;  // (1-255)
 const int REPORT_OVR_REFRESH_IDLE_COUNT = 10;  // (1-255) Must be less than or equal to the busy count
 const int REPORT_WCO_REFRESH_BUSY_COUNT = 30;  // (2-255)
 const int REPORT_WCO_REFRESH_IDLE_COUNT = 10;  // (2-255) Must be less than or equal to the busy count
 
-// The temporal resolution of the acceleration management subsystem. A higher number gives smoother
-// acceleration, particularly noticeable on machines that run at very high feedrates, but may negatively
-// impact performance. The correct value for this parameter is machine dependent, so it's advised to
-// set this only as high as needed. Approximate successful values can widely range from 50 to 200 or more.
-// NOTE: Changing this value also changes the execution time of a segment in the step segment buffer.
-// When increasing this value, this stores less overall time in the segment buffer and vice versa. Make
-// certain the step segment buffer is increased/decreased to account for these changes.
+//* The temporal resolution of the acceleration management subsystem. A higher number gives smoother
+//* acceleration, particularly noticeable on machines that run at very high feedrates, but may negatively
+//* impact performance. The correct value for this parameter is machine dependent, so it's advised to
+//* set this only as high as needed. Approximate successful values can widely range from 50 to 200 or more.
+//* NOTE: Changing this value also changes the execution time of a segment in the step segment buffer.
+//* When increasing this value, this stores less overall time in the segment buffer and vice versa. Make
+//* certain the step segment buffer is increased/decreased to account for these changes.
 const int ACCELERATION_TICKS_PER_SECOND = 100;
 
-// Sets the maximum step rate allowed to be written as a Grbl setting. This option enables an error
-// check in the settings module to prevent settings values that will exceed this limitation. The maximum
-// step rate is strictly limited by the CPU speed and will change if something other than an AVR running
-// at 16MHz is used.
-// NOTE: For now disabled, will enable if flash space permits.
+//* Sets the maximum step rate allowed to be written as a Grbl setting. This option enables an error
+//* check in the settings module to prevent settings values that will exceed this limitation. The maximum
+//* step rate is strictly limited by the CPU speed and will change if something other than an AVR running
+//* at 16MHz is used.
+//* NOTE: For now disabled, will enable if flash space permits.
 // #define MAX_STEP_RATE_HZ 30000 // Hz
 
-// By default, Grbl sets all input pins to normal-high operation with their internal pull-up resistors
-// enabled. This simplifies the wiring for users by requiring only a switch connected to ground,
-// although its recommended that users take the extra step of wiring in low-pass filter to reduce
-// electrical noise detected by the pin. If the user inverts the pin in Grbl settings, this just flips
-// which high or low reading indicates an active signal. In normal operation, this means the user
-// needs to connect a normal-open switch, but if inverted, this means the user should connect a
-// normal-closed switch.
-// The following options disable the internal pull-up resistors, sets the pins to a normal-low
-// operation, and switches must be now connect to Vcc instead of ground. This also flips the meaning
-// of the invert pin Grbl setting, where an inverted setting now means the user should connect a
-// normal-open switch and vice versa.
-// NOTE: All pins associated with the feature are disabled, i.e. XYZ limit pins, not individual axes.
-// WARNING: When the pull-ups are disabled, this requires additional wiring with pull-down resistors!
+//* By default, Grbl sets all input pins to normal-high operation with their internal pull-up resistors
+//* enabled. This simplifies the wiring for users by requiring only a switch connected to ground,
+//* although its recommended that users take the extra step of wiring in low-pass filter to reduce
+//* electrical noise detected by the pin. If the user inverts the pin in Grbl settings, this just flips
+//* which high or low reading indicates an active signal. In normal operation, this means the user
+//* needs to connect a normal-open switch, but if inverted, this means the user should connect a
+//* normal-closed switch.
+//* The following options disable the internal pull-up resistors, sets the pins to a normal-low
+//* operation, and switches must be now connect to Vcc instead of ground. This also flips the meaning
+//* of the invert pin Grbl setting, where an inverted setting now means the user should connect a
+//* normal-open switch and vice versa.
+//* NOTE: All pins associated with the feature are disabled, i.e. XYZ limit pins, not individual axes.
+//* WARNING: When the pull-ups are disabled, this requires additional wiring with pull-down resistors!
 //#define DISABLE_LIMIT_PIN_PULL_UP
 //#define DISABLE_PROBE_PIN_PULL_UP
 //#define DISABLE_CONTROL_PIN_PULL_UP
